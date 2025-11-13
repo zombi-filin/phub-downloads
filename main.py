@@ -21,7 +21,7 @@ if not os.path.exists(URL_LIST_FILE_NAME):
 else:
     with open(URL_LIST_FILE_NAME) as f:
         for line in f:
-            download_urls.append(line)
+            download_urls.append(line.replace('\n',''))
 
 client = phub.Client(login=config.LOGIN,password=config.PASSWORD, change_title_language = False)
 
