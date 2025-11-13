@@ -60,11 +60,11 @@ for url in download_urls:
 
         print(m3u8_url)
 
-        command = f'ffmpeg -i "{m3u8_url}" -c copy -bsf:a aac_adtstoasc "{file_name}"'
+        command = ['ffmpeg', '-i', m3u8_url, '-c', 'copy', '-bsf:a', 'aac_adtstoasc', file_name]
         
         with subprocess.Popen(command) as proc:
             try:
-                proc.wait(timeout=30)
+                proc.wait(timeout=60)
             except subprocess.TimeoutExpired:
                 proc.terminate()
                 proc.wait()
@@ -73,7 +73,7 @@ for url in download_urls:
     
     #
     
-    command = f'ffprobe -v quiet -print_format json -show_format -show_streams -i "{file_name}"'
+    command = ['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', '-i', file_name]
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     result_json = json.loads(result.stdout)
         
