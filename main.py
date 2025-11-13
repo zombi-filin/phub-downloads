@@ -12,6 +12,8 @@ URL_LIST_FILE_NAME = 'url.list'
 
 if not os.path.exists(DOWNLOAD_FOLDER_NAME):
     os.mkdir(DOWNLOAD_FOLDER_NAME)
+    
+os.chdir(DOWNLOAD_FOLDER_NAME)
 
 download_urls = []
 
@@ -37,7 +39,7 @@ for url in download_urls:
     
     video_title = re.sub(r'[^a-zA-Z0-9\s]', '', video.title)
 
-    file_name = f'{DOWNLOAD_FOLDER_NAME}\{video.key} - {video_title}.mp4'.replace('?','')
+    file_name = f'{video.key} - {video_title}.mp4'.replace('?','')
     
     print(f'{file_name}')
     
