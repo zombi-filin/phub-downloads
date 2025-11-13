@@ -10,11 +10,6 @@ DOWNLOAD_FOLDER_NAME = 'save'
 URL_LIST_FILE_NAME = 'url.list'
 
 
-if not os.path.exists(DOWNLOAD_FOLDER_NAME):
-    os.mkdir(DOWNLOAD_FOLDER_NAME)
-    
-os.chdir(DOWNLOAD_FOLDER_NAME)
-
 download_urls = []
 
 if not os.path.exists(URL_LIST_FILE_NAME):
@@ -24,6 +19,11 @@ else:
     with open(URL_LIST_FILE_NAME) as f:
         for line in f:
             download_urls.append(line.replace('\n',''))
+
+if not os.path.exists(DOWNLOAD_FOLDER_NAME):
+    os.mkdir(DOWNLOAD_FOLDER_NAME)
+    
+os.chdir(DOWNLOAD_FOLDER_NAME)
 
 client = phub.Client(login=config.LOGIN,password=config.PASSWORD, change_title_language = False)
 
