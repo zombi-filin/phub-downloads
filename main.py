@@ -25,12 +25,10 @@ if not os.path.exists(DOWNLOAD_FOLDER_NAME):
     
 os.chdir(DOWNLOAD_FOLDER_NAME)
 
-client = phub.Client(login=config.LOGIN,password=config.PASSWORD, change_title_language = False)
+
 
 for url in download_urls:
-    client.reset()
-    
-    time.sleep(5)
+    client = phub.Client(login=config.LOGIN,password=config.PASSWORD, change_title_language = False)
     
     video = client.get(url)
     
@@ -39,11 +37,10 @@ for url in download_urls:
     
     video_title = re.sub(r'[^a-zA-Z0-9\s]', '', video.title)
 
-    file_name = f'{video.key} - {video_title}.mp4'.replace('?','')
+    file_name = f'{video.key}-{video_title}.mp4'.replace('?','').replace(' ','_')
     
     print(f'{file_name}')
     
-    time.sleep(5)
 
     if os.path.exists(file_name):
         print(f'{file_name} exist')
@@ -73,8 +70,8 @@ for url in download_urls:
     
     #
     
-    command = ['ffprobe', '-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', '-i', file_name]
-    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    command = ['ffprobe', '-print_format', 'json', '-show_format', '-show_streams', file_name]
+    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
     result_json = json.loads(result.stdout)
         
     if len(result_json)==0 or video_duration != int(float(result_json['format']['duration'])):
