@@ -49,14 +49,20 @@ for url in download_urls:
     if os.path.exists(file_name):
         print(f'{file_name} exist')
     else:
-        m3u8_url = None
-        
+        m3u8_url_720 = None
+        m3u8_url_480 = None
 
         for (width, height), uri in video.get_m3u8_urls.items():
+            if width == 480 or height == 480:
+                m3u8_url_480 = uri
             if width == 0 or width== 720 or height == 720:
-                m3u8_url = uri
+                m3u8_url_720 = uri
 
-        if m3u8_url is None:
+        if m3u8_url_720 is not None:
+            m3u8_url = m3u8_url_720
+        elif m3u8_url_480 is not None:
+            m3u8_url = m3u8_url_480
+        else:
             breakpoint()
 
         print(m3u8_url)
