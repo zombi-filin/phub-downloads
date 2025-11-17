@@ -75,7 +75,7 @@ for url in download_urls:
     
     #
     
-    command = ['ffprobe', '-print_format', 'json', '-show_format', '-show_streams', file_name]
+    command = f'ffprobe -print_format json -show_format -show_streams {file_name}'
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
     result_json = json.loads(result.stdout)
         
@@ -88,4 +88,3 @@ for url in download_urls:
     
 print(f'total:{total_count} timeout:{timeout_count} removed:{remove_count}')
 print('DONE')
-pass
