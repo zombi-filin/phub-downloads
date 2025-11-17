@@ -65,7 +65,7 @@ for url in download_urls:
         
         with subprocess.Popen(command) as proc:
             try:
-                proc.wait(timeout=60)
+                proc.wait(timeout = video_duration)
             except subprocess.TimeoutExpired:
                 timeout_count += 1
                 proc.terminate()
@@ -79,7 +79,7 @@ for url in download_urls:
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
     result_json = json.loads(result.stdout)
         
-    if len(result_json)==0 or video_duration != int(float(result_json['format']['duration'])):
+    if len(result_json)==0 or abs(video_duration - int(float(result_json['format']['duration']))) > 2:
         print(f'remove {file_name}')
         if os.path.exists(file_name):
             os.remove(file_name)
