@@ -25,9 +25,13 @@ if not os.path.exists(DOWNLOAD_FOLDER_NAME):
     
 os.chdir(DOWNLOAD_FOLDER_NAME)
 
-
+timeout_count = 0
+remove_count = 0
+total_count = 0
 
 for url in download_urls:
+    total_count += 1
+
     client = phub.Client(login=config.LOGIN,password=config.PASSWORD, change_title_language = False)
     
     video = client.get(url)
@@ -63,6 +67,7 @@ for url in download_urls:
             try:
                 proc.wait(timeout=60)
             except subprocess.TimeoutExpired:
+                timeout_count += 1
                 proc.terminate()
                 proc.wait()
         
@@ -78,9 +83,9 @@ for url in download_urls:
         print(f'remove {file_name}')
         if os.path.exists(file_name):
             os.remove(file_name)
-        pass
+            remove_count += 1
     
     
-
+print(f'total:{total_count} timeout:{timeout_count} removed:{remove_count}')
 print('DONE')
 pass
