@@ -46,7 +46,10 @@ for viewkeys in viewkeys_list:
     client = phub.Client(login=config.LOGIN,password=config.PASSWORD, change_title_language = False)
     
     # Запрос видео
-    video = client.get(f'https://www.pornhub.org/view_video.php?viewkey={viewkeys}')
+    try:
+        video = client.get(f'https://www.pornhub.org/view_video.php?viewkey={viewkeys}')
+    except:
+        continue
     
     # Длительность видео
     video_duration = video.duration.seconds
