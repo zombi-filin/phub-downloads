@@ -87,7 +87,7 @@ for viewkeys in viewkeys_list:
         print(m3u8_url)
 
         # Команда загрузки потока
-        command = ['ffmpeg', '-i', m3u8_url, '-c', 'copy', '-bsf:a', 'aac_adtstoasc', file_name]
+        command = ['ffmpeg', '-i', m3u8_url, '-max_error_rate','0', '-c', 'copy', '-bsf:a', 'aac_adtstoasc', file_name]
         
         # Запуск команды
         with subprocess.Popen(command) as proc:
