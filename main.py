@@ -131,16 +131,16 @@ for viewkeys in viewkeys_list:
                 proc.terminate()
                 proc.wait()
     
-    # Запроса статистики скаченного видео
-    command = f'ffprobe -v warning -print_format json -show_format -show_streams {file_name}'
-    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
-    result_json = json.loads(result.stdout)
+    if os.path.exists(file_name):
+        # Запроса статистики скаченного видео
+        command = f'ffprobe -v warning -print_format json -show_format -show_streams {file_name}'
+        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
+        result_json = json.loads(result.stdout)
 
-    # Проверка дельты между оригиналом и скаченным видео
-    if len(result_json)==0 or abs(video_duration - int(float(result_json['format']['duration']))) > 2:
-        # Если разница большая удаляем скаченный файл
-        print(f'{file_name} remove')
-        if os.path.exists(file_name):
+        # Проверка дельты между оригиналом и скаченным видео
+        if len(result_json)==0 or abs(video_duration - int(float(result_json['format']['duration']))) > 2:
+            # Если разница большая удаляем скаченный файл
+            print(f'{file_name} remove')
             os.remove(file_name)
             remove_count += 1
     else:
