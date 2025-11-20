@@ -79,17 +79,18 @@ for viewkeys in viewkeys_list:
     # Запрос видео
     try:
         video = client.get(f'https://www.pornhub.org/view_video.php?viewkey={viewkeys}')
+        # Длительность видео
+        video_duration = video.duration.seconds
+        
+        # Заголовок видео
+        video_title = re.sub(r'[^a-zA-Z0-9\s]', '', video.title)
+        
+        # Имя выходного фала
+        file_name = f'{video.key}-{video_title}.mp4'.replace('?','').replace(' ','_')
     except:
+        print(f'{viewkeys} ERROR')
         continue
-    
-    # Длительность видео
-    video_duration = video.duration.seconds
-    
-    # Заголовок видео
-    video_title = re.sub(r'[^a-zA-Z0-9\s]', '', video.title)
 
-    # Имя выходного фала
-    file_name = f'{video.key}-{video_title}.mp4'.replace('?','').replace(' ','_')
     print(f'{file_name}')
     
     if os.path.exists(file_name):
