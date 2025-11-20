@@ -143,10 +143,10 @@ for viewkeys in viewkeys_list:
             print(f'{file_name} remove')
             os.remove(file_name)
             remove_count += 1
-    else:
-        #
-        ignore_list.append(viewkeys)
-        print(f'{file_name} GOOD')
+        else:
+            #
+            ignore_list.append(viewkeys)
+            print(f'{file_name} GOOD')
     
     if total_count % 10:
         ignore_list_save()
