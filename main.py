@@ -69,7 +69,7 @@ for viewkeys in viewkeys_list:
     total_count += 1
 
     if viewkeys in ignore_list:
-        ignore += 1
+        ignore_count += 1
         print(f'{viewkeys} ignore')
         continue
 
@@ -154,7 +154,7 @@ for viewkeys in viewkeys_list:
 ignore_list_save()
 
 # Вывод статистики
-print(f'total:{total_count} ignore:{ignore_list} timeout:{timeout_count} removed:{remove_count}')
+print(f'total:{total_count} ignore:{ignore_count} timeout:{timeout_count} removed:{remove_count}')
 
 # Конец скрипта
 print('DONE')
