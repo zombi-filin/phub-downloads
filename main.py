@@ -98,17 +98,25 @@ for viewkeys in viewkeys_list:
         print(f'{file_name} exist')
     elif not only_check:
         # Ссылки на файлы потоков
+        m3u8_url_1080 = None
         m3u8_url_720 = None
         m3u8_url_480 = None
 
         # Проход по спискам потоков
         for (width, height), uri in video.get_m3u8_urls.items():
+            if width == 1080 or height == 1080:
+                m3u8_url_1080 = uri
             if width == 480 or height == 480:
                 m3u8_url_480 = uri
             if width == 0 or width== 720 or height == 720:
                 m3u8_url_720 = uri
 
         # Выбор потока
+        if m3u8_url_1080 is not None:
+            m3u8_url = m3u8_url_1080
+        else:
+            continue
+        
         if m3u8_url_720 is not None:
             m3u8_url = m3u8_url_720
         elif m3u8_url_480 is not None:
