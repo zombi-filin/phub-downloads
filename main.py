@@ -116,14 +116,15 @@ for viewkeys in viewkeys_list:
             m3u8_url = m3u8_url_1080
         else:
             continue
-        
+        '''
         if m3u8_url_720 is not None:
             m3u8_url = m3u8_url_720
         elif m3u8_url_480 is not None:
             m3u8_url = m3u8_url_480
         else:
             breakpoint()
-
+        '''
+        
         print(f'{file_name} download')
 
         # Команда загрузки потока
