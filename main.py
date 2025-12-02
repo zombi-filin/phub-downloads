@@ -93,69 +93,60 @@ for viewkeys in viewkeys_list:
 
     print(f'{file_name}')
     
-    if os.path.exists(file_name):
-        # Видео файл существует
-        print(f'{file_name} exist')
-    elif not only_check:
-        # Ссылки на файлы потоков
-        m3u8_url_1080 = None
-        m3u8_url_720 = None
-        m3u8_url_480 = None
+    # Ссылки на файлы потоков
+    m3u8_url_list = [None, None, None]
 
-        # Проход по спискам потоков
-        for (width, height), uri in video.get_m3u8_urls.items():
-            if width == 1080 or height == 1080:
-                m3u8_url_1080 = uri
-            if width == 480 or height == 480:
-                m3u8_url_480 = uri
-            if width == 0 or width== 720 or height == 720:
-                m3u8_url_720 = uri
+    # Проход по спискам потоков
+    for (width, height), uri in video.get_m3u8_urls.items():
+        if width == 1080 or height == 1080:
+            m3u8_url_list[1] = uri
+            m3u8_url_1080 = uri
+        if width == 480 or height == 480:
+            m3u8_url_list[2] = uri
+        if width == 0 or width== 720 or height == 720:
+            m3u8_url_list[0] = uri
 
-        # Выбор потока
-        if m3u8_url_720 is not None:
-            m3u8_url = m3u8_url_720
-        elif m3u8_url_1080 is not None:
-            m3u8_url = m3u8_url_1080
-        elif m3u8_url_480 is not None:
-            m3u8_url = m3u8_url_480
-        else:
-            print('ERROR not found m3u8')
-            continue
+    for m3u8_url in m3u8_url_list:
+        if os.path.exists(file_name):
+            # Видео файл существует
+            print(f'{file_name} exist')
+        elif not only_check:
 
+            if m3u8_url is not None:
+                print(f'{file_name} download')
 
-        print(f'{file_name} download')
-
-        # Команда загрузки потока
-        command = ['ffmpeg', '-xerror', '-v','error', '-stats', '-i', m3u8_url, '-c', 'copy', '-bsf:a', 'aac_adtstoasc', file_name]
+                # Команда загрузки потока
+                command = ['ffmpeg', '-xerror', '-v','error', '-stats', '-i', m3u8_url, '-c', 'copy', '-bsf:a', 'aac_adtstoasc', file_name]
+                
+                # Запуск команды
+                with subprocess.Popen(command) as proc:
+                    try:
+                        # Таймаут 10 мин
+                        proc.wait(timeout = 10*60)
+                    except subprocess.TimeoutExpired:
+                        # Сработал таймаут
+                        timeout_count += 1
+                        proc.terminate()
+                        proc.wait()
         
-        # Запуск команды
-        with subprocess.Popen(command) as proc:
-            try:
-                # Таймаут 10 мин
-                proc.wait(timeout = 10*60)
-            except subprocess.TimeoutExpired:
-                # Сработал таймаут
-                timeout_count += 1
-                proc.terminate()
-                proc.wait()
-    
-    if os.path.exists(file_name):
-        # Запроса статистики скаченного видео
-        command = f'ffprobe -v warning -print_format json -show_format -show_streams {file_name}'
-        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
-        result_json = json.loads(result.stdout)
+        if os.path.exists(file_name):
+            # Запроса статистики скаченного видео
+            command = f'ffprobe -v warning -print_format json -show_format -show_streams {file_name}'
+            result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
+            result_json = json.loads(result.stdout)
 
-        # Проверка дельты между оригиналом и скаченным видео
-        if len(result_json)==0 or abs(video_duration - int(float(result_json['format']['duration']))) > 2:
-            # Если разница большая удаляем скаченный файл
-            print(f'{file_name} remove')
-            os.remove(file_name)
-            remove_count += 1
-        else:
-            #
-            ignore_list.append(viewkeys)
-            print(f'{file_name} GOOD')
-    
+            # Проверка дельты между оригиналом и скаченным видео
+            if len(result_json)==0 or abs(video_duration - int(float(result_json['format']['duration']))) > 2:
+                # Если разница большая удаляем скаченный файл
+                print(f'{file_name} remove')
+                os.remove(file_name)
+                remove_count += 1
+            else:
+                #
+                ignore_list.append(viewkeys)
+                print(f'{file_name} GOOD')
+                break
+        
     if total_count % 10:
         ignore_list_save()
 #
