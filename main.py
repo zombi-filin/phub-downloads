@@ -97,14 +97,17 @@ for viewkeys in viewkeys_list:
     m3u8_url_list = [None, None, None]
 
     # Проход по спискам потоков
-    for (width, height), uri in video.get_m3u8_urls.items():
-        if width == 1080 or height == 1080:
-            m3u8_url_list[1] = uri
-            m3u8_url_1080 = uri
-        if width == 480 or height == 480:
-            m3u8_url_list[2] = uri
-        if width == 0 or width== 720 or height == 720:
-            m3u8_url_list[0] = uri
+    try:
+        for (width, height), uri in video.get_m3u8_urls.items():
+            if width == 1080 or height == 1080:
+                m3u8_url_list[1] = uri
+                m3u8_url_1080 = uri
+            if width == 480 or height == 480:
+                m3u8_url_list[2] = uri
+            if width == 0 or width== 720 or height == 720:
+                m3u8_url_list[0] = uri
+    except:
+        print('ERROR get urls')
 
     for m3u8_url in m3u8_url_list:
         if os.path.exists(file_name):
